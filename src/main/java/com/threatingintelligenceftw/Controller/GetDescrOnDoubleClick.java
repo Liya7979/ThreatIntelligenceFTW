@@ -1,7 +1,7 @@
 package com.threatingintelligenceftw.Controller;
 
 import com.threatingintelligenceftw.Database.DataRetriever;
-import com.threatingintelligenceftw.Database.NVDCVE;
+import com.threatingintelligenceftw.Database.LocalCVE;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,10 +11,10 @@ import java.util.List;
 
 public class GetDescrOnDoubleClick extends MouseAdapter {
 
-    List<NVDCVE> data;
+    List<LocalCVE> data;
     DataRetriever retriever;
 
-    GetDescrOnDoubleClick(List<NVDCVE> data, DataRetriever retriever) {
+    GetDescrOnDoubleClick(List<LocalCVE> data, DataRetriever retriever) {
         this.data = data;
         this.retriever = retriever;
     }
@@ -32,7 +32,7 @@ public class GetDescrOnDoubleClick extends MouseAdapter {
     }
 
     private String description(String cve) {
-        for (NVDCVE entity : data) {
+        for (LocalCVE entity : data) {
             if (entity.getId().equals(cve)) {
                 return retriever.getVulInfo(entity);
             }

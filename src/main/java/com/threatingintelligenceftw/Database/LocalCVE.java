@@ -3,7 +3,7 @@ package com.threatingintelligenceftw.Database;
 import java.io.Serializable;
 import java.util.List;
 
-public class NVDCVE implements Serializable {
+public class LocalCVE implements Serializable {
 
     private String CVE;
     private String id;

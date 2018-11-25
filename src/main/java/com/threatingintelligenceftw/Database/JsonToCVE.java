@@ -5,26 +5,30 @@ import java.util.List;
 
 import org.json.*;
 
-public class JSONToCVE {
-    private List<NVDCVE> cveList;
+public class JsonToCVE {
+    private List<LocalCVE> cveList;
 
-    public JSONToCVE(String json) throws JSONException {
+    public JsonToCVE(String json) {
         cveList = new ArrayList<>();
-        JSONObject object = new JSONObject(json);
-        JSONArray cveArray = object.getJSONArray("CVE_Items");
-        for (int i = 0; i < cveArray.length(); i++) {
-            parseCVE(cveArray.getJSONObject(i));
+        try {
+            JSONObject object = new JSONObject(json);
+            JSONArray cveArray = object.getJSONArray("CVE_Items");
+            for (int i = 0; i < cveArray.length(); i++) {
+                parseCVE(cveArray.getJSONObject(i));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
-    public List<NVDCVE> getCveList() {
+    public List<LocalCVE> getCveList() {
         return cveList;
     }
 
     private void parseCVE(JSONObject arrayElem) {
         try {
             JSONObject jsonCVE = arrayElem.getJSONObject("cve");
-            NVDCVE cve = new NVDCVE();
+            LocalCVE cve = new LocalCVE();
             cve.setId(jsonCVE.getJSONObject("CVE_data_meta").getString("ID"));
             JSONArray jsonArray = jsonCVE.
                     getJSONObject("affects").
@@ -101,8 +105,8 @@ public class JSONToCVE {
             MetricsV3 metricsV3 = new MetricsV3();
             try {
                 JSONObject jsonMetricsV3 = jsonImpact.getJSONObject("baseMetricV3");
-
                 JSONObject jsonCVSSV3 = jsonMetricsV3.getJSONObject("cvssV3");
+
                 CVSSV3 cvssv3 = new CVSSV3();
                 cvssv3.setVersion(jsonCVSSV3.getString("version"));
                 cvssv3.setAttackVector(jsonCVSSV3.getString("attackVector"));
@@ -134,8 +138,8 @@ public class JSONToCVE {
             MetricsV2 metricsV2 = new MetricsV2();
             try {
                 JSONObject jsonMetricsV2 = jsonImpact.getJSONObject("baseMetricV2");
-
                 JSONObject jsonCVSSV2 = jsonMetricsV2.getJSONObject("cvssV2");
+
                 CVSSV2 cvssv2 = new CVSSV2();
                 cvssv2.setAccessVector(jsonCVSSV2.getString("accessVector"));
                 cvssv2.setAccessComplexity(jsonCVSSV2.getString("accessComplexity"));
@@ -144,6 +148,7 @@ public class JSONToCVE {
                 cvssv2.setIntegrityImpact(jsonCVSSV2.getString("integrityImpact"));
                 cvssv2.setAvailabilityImpact(jsonCVSSV2.getString("availabilityImpact"));
                 cvssv2.setBaseScore(jsonCVSSV2.getDouble("baseScore"));
+
                 metricsV2.setCvss(cvssv2);
                 metricsV2.setSeverity(jsonMetricsV2.getString("severity"));
                 metricsV2.setExploitabilityScore(jsonMetricsV2.getDouble("exploitabilityScore"));

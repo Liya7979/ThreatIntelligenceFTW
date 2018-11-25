@@ -6,36 +6,34 @@ import javax.swing.*;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DataRetriever {
 
-    private List<NVDCVE> data;
+    private List<LocalCVE> data;
 
     @SuppressWarnings("unchecked")
     public DataRetriever() {
         try {
             FileInputStream fis = new FileInputStream(App.LOCALDB_PATH);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            data = (List<NVDCVE>) ois.readObject();
+            data = (List<LocalCVE>) ois.readObject();
             ois.close();
             fis.close();
         } catch (IOException e) {
-            System.err.println("Couldn't reach the local database");
+            System.out.println("Couldn't reach the local database");
         } catch (ClassNotFoundException e) {
-            System.err.println("Uncompatible database");
+            System.err.println("Incompatible database");
         }
     }
 
-    public List<NVDCVE> getData() {
+    public List<LocalCVE> getData() {
         return data;
     }
 
     public JList<String> getVuls(String request) {
         DefaultListModel<String> model = new DefaultListModel<>();
-        for (NVDCVE entity : data) {
+        for (LocalCVE entity : data) {
             String lowerCaseRequest = request.toLowerCase();
             if (entity.getId().toLowerCase().contains(lowerCaseRequest) ||
                     (entity.getCVE() != null && entity.getCVE().toLowerCase().contains(lowerCaseRequest)) ||
@@ -46,7 +44,7 @@ public class DataRetriever {
         return new JList<>(model);
     }
 
-    public String getVulInfo(NVDCVE vul) {
+    public String getVulInfo(LocalCVE vul) {
         String nn = "\n\n";
         StringBuilder builder = new StringBuilder();
         builder.append("ID:\t\t").append(vul.getId()).append(nn);

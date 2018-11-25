@@ -1,7 +1,7 @@
 package com.threatingintelligenceftw.Controller;
 
 import com.threatingintelligenceftw.Database.DataRetriever;
-import com.threatingintelligenceftw.Database.NVDCVE;
+import com.threatingintelligenceftw.Database.LocalCVE;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,17 +25,27 @@ public class SearchLocalAction extends AbstractAction {
             return;
         }
         new BriefDescrFrame(retriever.getVuls(request), retriever.getData(), retriever);
-        //JOptionPane.showMessageDialog(null, retriever.getVuls(request));
     }
 }
 
 class BriefDescrFrame extends JFrame {
 
-    BriefDescrFrame(JList<String> names, List<NVDCVE> data, DataRetriever retriever) {
+    private static final Dimension NON_EMPTY = new Dimension(400, 600);
+    private static final Dimension EMPTY = new Dimension(450, 100);
+    private static final Font EMPTY_FONT = new Font("TimesRoman", Font.BOLD, 20);
+
+    BriefDescrFrame(JList<String> names, List<LocalCVE> data, DataRetriever retriever) {
         names.addMouseListener(new GetDescrOnDoubleClick(data, retriever));
-        JScrollPane scrollPane = new JScrollPane(names);
-        getContentPane().add(scrollPane);
-        setPreferredSize(new Dimension(400, 800));
+        if (names.getModel().getSize() != 0) {
+            JScrollPane scrollPane = new JScrollPane(names);
+            getContentPane().add(scrollPane);
+            setPreferredSize(NON_EMPTY);
+        } else {
+            JTextArea emptyListMessage = new JTextArea("Nothing found. Maybe you should\ntry online search?");
+            emptyListMessage.setFont(EMPTY_FONT);
+            getContentPane().add(emptyListMessage);
+            setPreferredSize(EMPTY);
+        }
         pack();
         setVisible(true);
     }
