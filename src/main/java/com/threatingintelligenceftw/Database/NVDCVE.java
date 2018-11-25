@@ -6,7 +6,6 @@ import java.util.List;
 public class NVDCVE implements Serializable {
 
     private String CVE;
-    private String authoritySource = "NVD";
     private String id;
     private Vendor vendor;
     private String CWE;
@@ -17,116 +16,152 @@ public class NVDCVE implements Serializable {
     private String publishedDate;
     private String lastModifiedDate;
 
-    public void setCVE(String CVE) {
-        this.CVE = CVE;
+    String getCVE() {
+        return CVE;
     }
 
-    public void setId(String id) {
+    public String getId() {
+        return id;
+    }
+
+    Vendor getVendor() {
+        return vendor;
+    }
+
+    String getCWE() {
+        return CWE;
+    }
+
+    List<Reference> getRefs() {
+        return refs;
+    }
+
+    String getDescription() {
+        return description;
+    }
+
+    MetricsV3 getMetricsV3() {
+        return metricsV3;
+    }
+
+    MetricsV2 getMetricsV2() {
+        return metricsV2;
+    }
+
+    String getPublishedDate() {
+        return publishedDate;
+    }
+
+    String getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    void setId(String id) {
         this.id = id;
     }
 
-    public void setVendor(Vendor vendor) {
+    void setVendor(Vendor vendor) {
         this.vendor = vendor;
     }
 
-    public void setCWE(String CWE) {
+    void setCWE(String CWE) {
         this.CWE = CWE;
     }
 
-    public void setRefs(List<Reference> refs) {
+    void setRefs(List<Reference> refs) {
         this.refs = refs;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
         this.description = description;
     }
 
-    public void setMetricsV3(MetricsV3 metricsV3) {
+    void setMetricsV3(MetricsV3 metricsV3) {
         this.metricsV3 = metricsV3;
     }
 
-    public void setMetricsV2(MetricsV2 metricsV2) {
+    void setMetricsV2(MetricsV2 metricsV2) {
         this.metricsV2 = metricsV2;
     }
 
-    public void setPublishedDate(String publishedDate) {
+    void setPublishedDate(String publishedDate) {
         this.publishedDate = publishedDate;
     }
 
-    public void setLastModifiedDate(String lastModifiedDate) {
+    void setLastModifiedDate(String lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 }
 
 class Vendor implements Serializable {
-    String vendorName;
-    String productName;
-    List<String> versions;
+    private final String vendorName;
+    private final String productName;
+    private final List<String> versions;
 
-    public Vendor(String vendorName, String productName, List<String> versions) {
+    Vendor(String vendorName, String productName, List<String> versions) {
         this.vendorName = vendorName;
         this.productName = productName;
         this.versions = versions;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Vendor:\t\t").append(vendorName).append('\n');
+        builder.append("Product name:\t").append(productName).append('\n');
+        builder.append("Versions:");
+        for (String version : versions) {
+            builder.append("\t\t").append(version).append('\n');
+        }
+        builder.append('\n');
+        return builder.toString();
+    }
 }
 
 class Reference implements Serializable {
-    private String url;
+    private final String url;
     private String name;
 
     Reference(String url, String name) {
         this.url = url;
         this.name = name;
     }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    
+    @Override
+    public String toString() {
+        return "Name: " + name + "\n\t\tURL: " + url + '\n';
     }
 }
 
 class MetricsV3 implements Serializable {
+    
     private CVSSV3 cvss;
     private double exploitabilityScore;
     private double impactScore;
-
-    public CVSSV3 getCvss() {
-        return cvss;
+    
+    @Override
+    public String toString() {
+        return "\t\tCVSSV3:\n" +
+                cvss.toString() +
+                "\n\t\tExploitability score:\t" + exploitabilityScore +
+                "\n\t\tImpact score:\t\t" + impactScore + "\n\n";
     }
 
-    public double getExploitabilityScore() {
-        return exploitabilityScore;
-    }
-
-    public double getImpactScore() {
-        return impactScore;
-    }
-
-    public void setCvss(CVSSV3 cvss) {
+    void setCvss(CVSSV3 cvss) {
         this.cvss = cvss;
     }
 
-    public void setExploitabilityScore(double exploitabilityScore) {
+    void setExploitabilityScore(double exploitabilityScore) {
         this.exploitabilityScore = exploitabilityScore;
     }
 
-    public void setImpactScore(double impactScore) {
+    void setImpactScore(double impactScore) {
         this.impactScore = impactScore;
     }
 }
 
 class CVSSV3 implements Serializable {
+    
     private String version;
     private String attackVector;
     private String attackComplexity;
@@ -138,68 +173,49 @@ class CVSSV3 implements Serializable {
     private String availabilityImpact;
     private double baseScore;
     private String baseSeverity;
+    
+    @Override
+    public String toString() {
+        String ttt = "\t\t\t";
+
+        return ttt + "Version:\t\t" + version + '\n' +
+                ttt + "Attack vector:\t" + attackVector + '\n' +
+                ttt + "Attack complexity:\t" + attackComplexity + '\n' +
+                ttt + "Privileges required:\t" + privilegesRequired + '\n' +
+                ttt + "User interaction:\t" + userInteraction + '\n' +
+                ttt + "Scope:\t\t" + scope + '\n' +
+                ttt + "Confidentiality impact:\t" + confidentialityImpact + '\n' +
+                ttt + "Integrity impact:\t" + integrityImpact + '\n' +
+                ttt + "Availability impact:\t" + availabilityImpact + '\n' +
+                ttt + "Base score:\t\t" + baseScore + '\n' +
+                ttt + "Base severity:\t" + baseSeverity + '\n';
+    }
 
     public String getVersion() {
         return version;
-    }
-
-    public String getAttackVector() {
-        return attackVector;
-    }
-
-    public String getAttackComplexity() {
-        return attackComplexity;
-    }
-
-    public String getPrivilegesRequired() {
-        return privilegesRequired;
-    }
-
-    public String getUserInteraction() {
-        return userInteraction;
     }
 
     public String getScope() {
         return scope;
     }
 
-    public String getConfidentialityImpact() {
-        return confidentialityImpact;
-    }
-
-    public String getIntegrityImpact() {
-        return integrityImpact;
-    }
-
-    public String getAvailabilityImpact() {
-        return availabilityImpact;
-    }
-
-    public double getBaseScore() {
-        return baseScore;
-    }
-
-    public String getBaseSeverity() {
-        return baseSeverity;
-    }
-
     public void setVersion(String version) {
         this.version = version;
     }
 
-    public void setAttackVector(String attackVector) {
+    void setAttackVector(String attackVector) {
         this.attackVector = attackVector;
     }
 
-    public void setAttackComplexity(String attackComplexity) {
+    void setAttackComplexity(String attackComplexity) {
         this.attackComplexity = attackComplexity;
     }
 
-    public void setPrivilegesRequired(String privilegesRequired) {
+    void setPrivilegesRequired(String privilegesRequired) {
         this.privilegesRequired = privilegesRequired;
     }
 
-    public void setUserInteraction(String userInteraction) {
+    void setUserInteraction(String userInteraction) {
         this.userInteraction = userInteraction;
     }
 
@@ -207,28 +223,29 @@ class CVSSV3 implements Serializable {
         this.scope = scope;
     }
 
-    public void setConfidentialityImpact(String confidentialityImpact) {
+    void setConfidentialityImpact(String confidentialityImpact) {
         this.confidentialityImpact = confidentialityImpact;
     }
 
-    public void setIntegrityImpact(String integrityImpact) {
+    void setIntegrityImpact(String integrityImpact) {
         this.integrityImpact = integrityImpact;
     }
 
-    public void setAvailabilityImpact(String availabilityImpact) {
+    void setAvailabilityImpact(String availabilityImpact) {
         this.availabilityImpact = availabilityImpact;
     }
 
-    public void setBaseScore(double baseScore) {
+    void setBaseScore(double baseScore) {
         this.baseScore = baseScore;
     }
 
-    public void setBaseSeverity(String baseSeverity) {
+    void setBaseSeverity(String baseSeverity) {
         this.baseSeverity = baseSeverity;
     }
 }
 
 class MetricsV2 implements Serializable {
+    
     private CVSSV2 cvss;
     private String severity;
     private double exploitabilityScore;
@@ -237,68 +254,48 @@ class MetricsV2 implements Serializable {
     private boolean obtainUserPrivilege;
     private boolean obtainOtherPrivilege;
     private boolean userInteractionRequired;
-
-    public CVSSV2 getCvss() {
-        return cvss;
+    
+    @Override
+    public String toString() {
+        return "\t\tCVSSV2:\n" + cvss.toString() +
+                "\n\t\tSerenity:\t\t" + severity +
+                "\n\t\tExploitability score:\t" + exploitabilityScore +
+                "\n\t\tImpact score:\t\t" + impactScore +
+                "\n\t\tObtainAllPrivilege:\t" + (obtainAllPrivilege ? "TRUE" : "FALSE") +
+                "\n\t\tObtainUserPrivilege:\t" + (obtainUserPrivilege ? "TRUE" : "FALSE") +
+                "\n\t\tObtainOtherPrivilege:\t" + (obtainOtherPrivilege ? "TRUE" : "FALSE") +
+                "\n\t\tUserIntegrationRequired:\t" + (userInteractionRequired ? "TRUE" : "FALSE") + "\n\n";
     }
 
-    public String getSeverity() {
-        return severity;
-    }
-
-    public double getExploitabilityScore() {
-        return exploitabilityScore;
-    }
-
-    public double getImpactScore() {
-        return impactScore;
-    }
-
-    public boolean isObtainAllPrivilege() {
-        return obtainAllPrivilege;
-    }
-
-    public boolean isObtainUserPrivilege() {
-        return obtainUserPrivilege;
-    }
-
-    public boolean isObtainOtherPrivilege() {
-        return obtainOtherPrivilege;
-    }
-
-    public boolean isUserInteractionRequired() {
-        return userInteractionRequired;
-    }
-
-    public void setCvss(CVSSV2 cvss) {
+    void setCvss(CVSSV2 cvss) {
         this.cvss = cvss;
     }
 
-    public void setSeverity(String severity) {
+    void setSeverity(String severity) {
         this.severity = severity;
     }
 
-    public void setExploitabilityScore(double exploitabilityScore) {
+    void setExploitabilityScore(double exploitabilityScore) {
         this.exploitabilityScore = exploitabilityScore;
     }
 
-    public void setImpactScore(double impactScore) {
+    void setImpactScore(double impactScore) {
         this.impactScore = impactScore;
     }
 
-    public void setObtainAllPrivilege(boolean obtainAllPrivilege) {
+    void setObtainAllPrivilege(boolean obtainAllPrivilege) {
         this.obtainAllPrivilege = obtainAllPrivilege;
     }
 
-    public void setObtainUserPrivilege(boolean obtainUserPrivilege) {
+    void setObtainUserPrivilege(boolean obtainUserPrivilege) {
         this.obtainUserPrivilege = obtainUserPrivilege;
     }
 
-    public void setObtainOtherPrivilege(boolean obtainOtherPrivilege) {
+    void setObtainOtherPrivilege(boolean obtainOtherPrivilege) {
         this.obtainOtherPrivilege = obtainOtherPrivilege;
     }
 
-    public void setUserInteractionRequired(boolean userInteractionRequired) {
+    void setUserInteractionRequired(boolean userInteractionRequired) {
         this.userInteractionRequired = userInteractionRequired;
     }
 }
@@ -312,6 +309,21 @@ class CVSSV2 implements Serializable {
     private String integrityImpact;
     private String availabilityImpact;
     private double baseScore;
+    
+    @Override
+    public String toString() {
+        String ttt = "\t\t\t";
+        char n = '\n';
+
+        return ttt + "Version:\t\t" + version + n +
+                ttt + "Access vector:\t" + accessVector + n +
+                ttt + "Access complexity:\t" + accessComplexity + n +
+                ttt + "Authentication:\t" + authentication + n +
+                ttt + "Confidentiality impact:\t" + confidentialityImpact + n +
+                ttt + "Integrity impact:\t" + integrityImpact + n +
+                ttt + "Availability impact:\t" + availabilityImpact + n +
+                ttt + "Base score:\t\t" + baseScore + n;
+    }
 
     public String getVersion() {
         return version;
@@ -321,59 +333,31 @@ class CVSSV2 implements Serializable {
         this.version = version;
     }
 
-    public String getAccessVector() {
-        return accessVector;
-    }
-
-    public void setAccessVector(String accessVector) {
+    void setAccessVector(String accessVector) {
         this.accessVector = accessVector;
     }
 
-    public String getAccessComplexity() {
-        return accessComplexity;
-    }
-
-    public void setAccessComplexity(String accessComplexity) {
+    void setAccessComplexity(String accessComplexity) {
         this.accessComplexity = accessComplexity;
     }
 
-    public String getAuthentication() {
-        return authentication;
-    }
-
-    public void setAuthentication(String authentication) {
+    void setAuthentication(String authentication) {
         this.authentication = authentication;
     }
 
-    public String getConfidentialityImpact() {
-        return confidentialityImpact;
-    }
-
-    public void setConfidentialityImpact(String confidentialityImpact) {
+    void setConfidentialityImpact(String confidentialityImpact) {
         this.confidentialityImpact = confidentialityImpact;
     }
 
-    public String getIntegrityImpact() {
-        return integrityImpact;
-    }
-
-    public void setIntegrityImpact(String integrityImpact) {
+    void setIntegrityImpact(String integrityImpact) {
         this.integrityImpact = integrityImpact;
     }
 
-    public String getAvailabilityImpact() {
-        return availabilityImpact;
-    }
-
-    public void setAvailabilityImpact(String availabilityImpact) {
+    void setAvailabilityImpact(String availabilityImpact) {
         this.availabilityImpact = availabilityImpact;
     }
 
-    public double getBaseScore() {
-        return baseScore;
-    }
-
-    public void setBaseScore(double baseScore) {
+    void setBaseScore(double baseScore) {
         this.baseScore = baseScore;
     }
 }
